@@ -1,0 +1,187 @@
+<?php
+// update_resource.module
+
+///**
+// * Implements hook_entity_info().
+// */
+function update_resource_entity_info() {
+    return array(
+        'update' => array(
+            'label' => t('update'),
+            'base table' => 'updates',
+            'entity keys' => array(
+                'id' => 'id',
+            ),
+            'entity class'           => 'Entity',
+            'controller class'       => 'UpdateController',
+        ),
+    );
+}
+
+
+class UpdateController extends EntityAPIController {
+
+    public function load($ids = array(), $conditions = array()) {
+        $entities = parent::load($ids, $conditions);
+
+        foreach($entities as &$entity) {
+            $entity->user = user_load($entity->uid);
+            unset($entity->user->password);
+
+            $entity->place = place_load($entity->place_id);
+        }
+        return $entities;
+
+    } // Nothing to see here,
+}
+
+
+
+
+function update_load($id, $reset = FALSE) {
+    $update = update_load_multiple(array($id), array(), $reset);
+    return $update ? $update[0] : FALSE;
+}
+function update_load_multiple($ids = array(), $conditions = array(), $reset = FALSE) {
+    return array_values(entity_load('update', $ids, $conditions, $reset));
+}
+function update_save($entity) {
+    entity_save('update', $entity);
+}
+function update_delete($id) {
+    entity_delete('update', $id);
+}
+
+
+/**
+ * Implementation of hook_services_resources().
+ */
+function update_resource_services_resources() {
+    $resources = array();
+
+    $resources['update'] = array(
+        'retrieve' => array(
+            'help' => 'Retrieves a update',
+            'file' => array('file' => 'inc', 'module' => 'update_resource'),
+            'callback' => '_update_resource_retrieve',
+            'access callback' => '_update_resource_access',
+            'access arguments' => array('view'),
+            'access arguments append' => TRUE,
+            'args' => array(
+                array(
+                    'name' => 'id',
+                    'type' => 'int',
+                    'description' => 'The id of the update to get',
+                    'source' => array('path' => '0'),
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'create' => array(
+            'help' => 'Creates a update',
+            'file' => array('file' => 'inc', 'module' => 'update_resource'),
+            'callback' => '_update_resource_create',
+            'access callback' => '_update_resource_access',
+            'access arguments' => array('create'),
+            'access arguments append' => FALSE,
+            'args' => array(
+                array(
+                    'name' => 'data',
+                    'type' => 'struct',
+                    'description' => 'The update object',
+                    'source' => 'data',
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'update' => array(
+            'help' => 'Updates a update',
+            'file' => array('file' => 'inc', 'module' => 'update_resource'),
+            'callback' => '_update_resource_update',
+            'access callback' => '_update_resource_access',
+            'access arguments' => array('update'),
+            'access arguments append' => TRUE,
+            'args' => array(
+                array(
+                    'name' => 'id',
+                    'type' => 'int',
+                    'description' => 'The id of the node to update',
+                    'source' => array('path' => '0'),
+                    'optional' => FALSE,
+                ),
+                array(
+                    'name' => 'data',
+                    'type' => 'struct',
+                    'description' => 'The update data object',
+                    'source' => 'data',
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'delete' => array(
+            'help' => 'Deletes a update',
+            'file' => array('file' => 'inc', 'module' => 'update_resource'),
+            'callback' => '_update_resource_delete',
+            'access callback' => '_update_resource_access',
+            'access arguments' => array('delete'),
+            'access arguments append' => TRUE,
+            'args' => array(
+                array(
+                    'name' => 'nid',
+                    'type' => 'int',
+                    'description' => 'The id of the update to delete',
+                    'source' => array('path' => '0'),
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'index' => array(
+            'help' => 'List all nodes',
+            'file' => array('type' => 'inc', 'module' => 'update_resource', 'name' => 'update_resource'),
+            'callback' => '_update_resource_index',
+            'args' => array(
+                array(
+                    'name' => 'page',
+                    'optional' => TRUE,
+                    'type' => 'int',
+                    'description' => 'The zero-based index of the page to get, defaults to 0.',
+                    'default value' => 0,
+                    'source' => array('param' => 'page'),
+                ),
+                array(
+                    'name' => 'fields',
+                    'optional' => TRUE,
+                    'type' => 'string',
+                    'description' => 'The fields to get.',
+                    'default value' => '*',
+                    'source' => array('param' => 'fields'),
+                ),
+                array(
+                    'name' => 'parameters',
+                    'optional' => TRUE,
+                    'type' => 'array',
+                    'description' => 'Parameters array',
+                    'default value' => array(),
+                    'source' => array('param' => 'parameters'),
+                ),
+                array(
+                    'name' => 'pagesize',
+                    'optional' => TRUE,
+                    'type' => 'int',
+                    'description' => 'Number of records to get per page.',
+                    'default value' => variable_get('services_node_index_page_size', 20),
+                    'source' => array('param' => 'pagesize'),
+                ),
+            ),
+            'access arguments' => array('access content'),
+        ),
+    );
+
+
+
+
+
+    return $resources;
+}
+
+

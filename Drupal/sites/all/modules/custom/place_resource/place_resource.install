@@ -1,0 +1,97 @@
+<?php
+// groupresource.install
+/**
+ * Implementation of hook_schema().
+ */
+function place_resource_schema() {
+    $schema['places'] = array(
+        'description' => t('Stores users places.'),
+        'fields' => array(
+            'id' => array(
+                'description' => t('The primary identifier for a place.'),
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'created' => array(
+                'description' => t('The timestamp for when the place was created.'),
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'modified' => array(
+                'description' => t('The timestamp for when the place was modified.'),
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'name' => array(
+                'description' => t('Name of the place'),
+                'type' => 'varchar',
+                'length' => 255,
+            ),
+            'latitude' => array(
+                'description' => t('Latitude of the origin of the geofence'),
+                'type' => 'float',
+                'size' => 'big',
+            ),
+            'longitude' => array(
+                'description' => t('Longitude of the origin of the geofence'),
+                'type' => 'float',
+                'size' => 'big',
+            ),
+            'radius' => array(
+                'description' => t('The radius from the lat lon to use as the geofence'),
+                'type' => 'int',
+                'default' => 0,
+            ),
+            'enabled' => array(
+                'description' => t('Stores if the Place is enabled'),
+                'type' => 'int',
+                'default' => 0,
+            ),
+            'uid' => array(
+                'description' => t('The user that created the place.'),
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+        ),
+        'foreign keys' => array(
+            'user' => array(
+                'table' => 'users',
+                'columns' => array('uid' => 'uid'),
+            ),
+        ),
+        'primary key' => array('id'),
+    );
+
+    return $schema;
+}
+//
+///**
+// * Implements hook_install()
+// */
+//function place_resource_install() {
+//    global $user;
+//
+//    // Install some default types
+//    $place_types = array(
+//        'General',
+//        'X-Rays',
+//        'Gene Mutations',
+//        'Diagnoses',
+//    );
+//
+//    foreach($place_types as $place_type) {
+//        $data = array();
+//        $data['name'] = $place_type;
+//        $data['created'] = time();
+//        $data['modified'] = time();
+//        drupal_write_record('place_types', $data);
+//    }
+//
+//}

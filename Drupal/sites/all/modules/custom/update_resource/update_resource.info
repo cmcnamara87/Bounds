@@ -1,0 +1,11 @@
+name = update Resource
+description = updates
+package = A - Resources
+
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = rest_server
+
+files[] = update_resource.inc
+files[] = update_resource.module

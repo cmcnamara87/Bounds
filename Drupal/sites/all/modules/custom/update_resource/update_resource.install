@@ -1,0 +1,87 @@
+<?php
+// groupresource.install
+/**
+ * Implementation of hook_schema().
+ */
+function update_resource_schema() {
+    $schema['updates'] = array(
+        'description' => t('Stores users updates.'),
+        'fields' => array(
+            'id' => array(
+                'description' => t('The primary identifier for a update.'),
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'created' => array(
+                'description' => t('The timestamp for when the update was created.'),
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'modified' => array(
+                'description' => t('The timestamp for when the update was modified.'),
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'uid' => array(
+                'description' => t('The user that created the update.'),
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'entered' => array(
+                'description' => t('1 if they entered, 0 if they exited'),
+                'type' => 'int',
+            ),
+            'place_id' => array(
+                'description' => t('The place they went to.'),
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+        ),
+        'foreign keys' => array(
+            'user' => array(
+                'table' => 'users',
+                'columns' => array('uid' => 'uid'),
+            ),
+            'place' => array(
+                'table' => 'places',
+                'columns' => array('id' => 'place_id'),
+            ),
+        ),
+        'primary key' => array('id'),
+    );
+
+    return $schema;
+}
+//
+///**
+// * Implements hook_install()
+// */
+//function update_resource_install() {
+//    global $user;
+//
+//    // Install some default types
+//    $update_types = array(
+//        'General',
+//        'X-Rays',
+//        'Gene Mutations',
+//        'Diagnoses',
+//    );
+//
+//    foreach($update_types as $update_type) {
+//        $data = array();
+//        $data['name'] = $update_type;
+//        $data['created'] = time();
+//        $data['modified'] = time();
+//        drupal_write_record('update_types', $data);
+//    }
+//
+//}

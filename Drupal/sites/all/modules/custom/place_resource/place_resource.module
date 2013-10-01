@@ -1,0 +1,185 @@
+<?php
+// place_resource.module
+
+///**
+// * Implements hook_entity_info().
+// */
+function place_resource_entity_info() {
+    return array(
+        'place' => array(
+            'label' => t('place'),
+            'base table' => 'places',
+            'entity keys' => array(
+                'id' => 'id',
+            ),
+            'entity class'           => 'Entity',
+            'controller class'       => 'EntityAPIController',
+        ),
+    );
+}
+
+
+//class placeController extends EntityAPIController {
+//
+//    public function load($ids = array(), $conditions = array()) {
+//        $entities = parent::load($ids, $conditions);
+//
+//        foreach($entities as &$entity) {
+//            $entity->user = user_load($entity->uid);
+//            unset($entity->user->password);
+//        }
+//        return $entities;
+//
+//    } // Nothing to see here,
+//}
+
+
+
+
+function place_load($id, $reset = FALSE) {
+    $place = place_load_multiple(array($id), array(), $reset);
+    return $place ? $place[0] : FALSE;
+}
+function place_load_multiple($ids = array(), $conditions = array(), $reset = FALSE) {
+    return array_values(entity_load('place', $ids, $conditions, $reset));
+}
+function place_save($entity) {
+    entity_save('place', $entity);
+}
+function place_delete($id) {
+    entity_delete('place', $id);
+}
+
+
+/**
+ * Implementation of hook_services_resources().
+ */
+function place_resource_services_resources() {
+    $resources = array();
+
+    $resources['place'] = array(
+        'retrieve' => array(
+            'help' => 'Retrieves a place',
+            'file' => array('file' => 'inc', 'module' => 'place_resource'),
+            'callback' => '_place_resource_retrieve',
+            'access callback' => '_place_resource_access',
+            'access arguments' => array('view'),
+            'access arguments append' => TRUE,
+            'args' => array(
+                array(
+                    'name' => 'id',
+                    'type' => 'int',
+                    'description' => 'The id of the place to get',
+                    'source' => array('path' => '0'),
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'create' => array(
+            'help' => 'Creates a place',
+            'file' => array('file' => 'inc', 'module' => 'place_resource'),
+            'callback' => '_place_resource_create',
+            'access callback' => '_place_resource_access',
+            'access arguments' => array('create'),
+            'access arguments append' => FALSE,
+            'args' => array(
+                array(
+                    'name' => 'data',
+                    'type' => 'struct',
+                    'description' => 'The place object',
+                    'source' => 'data',
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'update' => array(
+            'help' => 'Updates a place',
+            'file' => array('file' => 'inc', 'module' => 'place_resource'),
+            'callback' => '_place_resource_update',
+            'access callback' => '_place_resource_access',
+            'access arguments' => array('update'),
+            'access arguments append' => TRUE,
+            'args' => array(
+                array(
+                    'name' => 'id',
+                    'type' => 'int',
+                    'description' => 'The id of the node to update',
+                    'source' => array('path' => '0'),
+                    'optional' => FALSE,
+                ),
+                array(
+                    'name' => 'data',
+                    'type' => 'struct',
+                    'description' => 'The place data object',
+                    'source' => 'data',
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'delete' => array(
+            'help' => 'Deletes a place',
+            'file' => array('file' => 'inc', 'module' => 'place_resource'),
+            'callback' => '_place_resource_delete',
+            'access callback' => '_place_resource_access',
+            'access arguments' => array('delete'),
+            'access arguments append' => TRUE,
+            'args' => array(
+                array(
+                    'name' => 'nid',
+                    'type' => 'int',
+                    'description' => 'The id of the place to delete',
+                    'source' => array('path' => '0'),
+                    'optional' => FALSE,
+                ),
+            ),
+        ),
+        'index' => array(
+            'help' => 'List all nodes',
+            'file' => array('type' => 'inc', 'module' => 'place_resource', 'name' => 'place_resource'),
+            'callback' => '_place_resource_index',
+            'args' => array(
+                array(
+                    'name' => 'page',
+                    'optional' => TRUE,
+                    'type' => 'int',
+                    'description' => 'The zero-based index of the page to get, defaults to 0.',
+                    'default value' => 0,
+                    'source' => array('param' => 'page'),
+                ),
+                array(
+                    'name' => 'fields',
+                    'optional' => TRUE,
+                    'type' => 'string',
+                    'description' => 'The fields to get.',
+                    'default value' => '*',
+                    'source' => array('param' => 'fields'),
+                ),
+                array(
+                    'name' => 'parameters',
+                    'optional' => TRUE,
+                    'type' => 'array',
+                    'description' => 'Parameters array',
+                    'default value' => array(),
+                    'source' => array('param' => 'parameters'),
+                ),
+                array(
+                    'name' => 'pagesize',
+                    'optional' => TRUE,
+                    'type' => 'int',
+                    'description' => 'Number of records to get per page.',
+                    'default value' => variable_get('services_node_index_page_size', 20),
+                    'source' => array('param' => 'pagesize'),
+                ),
+            ),
+            'access arguments' => array('access content'),
+        ),
+    );
+
+
+
+
+
+    return $resources;
+}
+
+
