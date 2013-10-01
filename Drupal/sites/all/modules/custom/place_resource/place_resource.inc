@@ -66,18 +66,7 @@ function _place_resource_delete($id) {
 }
 
 function _place_resource_index($page, $fields, $parameters, $page_size) {
-    $query = new EntityFieldQuery();
-
-    $query->entityCondition('entity_type', 'place');
-
-    foreach($parameters as $parameter => $value) {
-        $query->propertyCondition($parameter, $value);
-    }
-    $query->range($page * $page_size, $page_size);
-    $result = $query->execute();
-    $ids = array_keys($result['place']);
-
-    return place_load_multiple($ids);
+    return resource_helper_index("place", $page, $fields, $parameters, $page_size);
 }
 
 /**
