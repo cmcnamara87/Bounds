@@ -26,9 +26,10 @@
     
     if([self.data objectForKey:@"id"]) {
         NSString *path = [self.class path];
-        path = [path stringByAppendingFormat:@"/%@", self.data[@"id"]];
+        path = [path stringByAppendingFormat:@"%@/%@", kApi, self.data[@"id"]];
         
-        [[CMApiController httpClient] putPath:path parameters:self.data success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[CMApiController httpClient] putPath:path
+                                   parameters:self.data success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             success();
             
@@ -37,7 +38,8 @@
         }];
     } else {
         // Saving a new resource
-        [[CMApiController httpClient] postPath:[self.class path] parameters:self.data success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[CMApiController httpClient] postPath:[NSString stringWithFormat:@"%@/%@", kApi, [self.class path]]
+                                    parameters:self.data success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             success();
             
@@ -50,7 +52,7 @@
 + (void)getWithID:(int)resourceId success:(void (^)(id resource))success {
     
     NSString *path = [self.class path];
-    path = [path stringByAppendingFormat:@"/%d", resourceId];
+    path = [path stringByAppendingFormat:@"%@/%d", kApi, resourceId];
     
     [[CMApiController httpClient] getPath:path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -64,7 +66,17 @@
 + (void)queryWithParameters:(NSDictionary *)parameters success:(void (^)(NSMutableArray *resources))success {
     
     NSLog(@"Querying with aprameters");
-    [[CMApiController httpClient] getPath:[self.class path] parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+    NSMutableDictionary *newParams = [[NSMutableDictionary alloc] init];
+    
+    for (NSString* key in parameters) {
+        id value = [parameters objectForKey:key];
+        [newParams setObject:value forKey:[NSString stringWithFormat:@"parameters[%@]", key]];
+    }
+    
+    
+    [[CMApiController httpClient] getPath:[NSString stringWithFormat:@"%@/%@", kApi, [self.class path]]
+                               parameters:newParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSMutableArray *responses = [NSMutableArray arrayWithCapacity:[responseObject count]];
         
@@ -83,7 +95,8 @@
 }
 
 + (NSString *)path {
-    return @"api";
+    /** Should be overwritten */
+    return @"";
 }
 
 - (NSString *)description {

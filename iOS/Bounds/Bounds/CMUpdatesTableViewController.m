@@ -8,6 +8,7 @@
 
 #import "CMUpdatesTableViewController.h"
 #import "CMUpdateResource.h"
+#import "CMLoginManager.h"
 
 @interface CMUpdatesTableViewController ()
 @property (nonatomic, strong) NSMutableArray *updates;
@@ -37,11 +38,16 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     // Load in the updates
-    [CMUpdateResource queryWithParameters:@{} success:^(NSMutableArray *resources) {
-        self.updates = resources;
-//        NSLog(@"updates %@", self.updates);
-        [self.tableView reloadData];
-    }];
+    if(![[CMLoginManager loginManager] currentUser]) {
+//        [self performSegueWithIdentifier:@"Show Login" sender:self];
+    } else {
+        [CMUpdateResource queryWithParameters:@{} success:^(NSMutableArray *resources) {
+            self.updates = resources;
+            //        NSLog(@"updates %@", self.updates);
+            [self.tableView reloadData];
+        }];
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning

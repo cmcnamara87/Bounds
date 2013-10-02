@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define kApi @"test"
+
 @interface CMResource : NSObject
 
 + (void)queryWithParameters:(NSDictionary *)parameters success:(void (^)(NSMutableArray *resources))success;

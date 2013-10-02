@@ -31,6 +31,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
+    NSLog(@"\n\n TAB BAR APPEARED");
     if(![[CMLoginManager loginManager] currentUser]) {
         [self performSegueWithIdentifier:@"Show Login" sender:self];
     }

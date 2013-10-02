@@ -56,5 +56,28 @@ function user_load_multiple_small($uids = array(), $conditions = array(), $reset
 }
 
 
+/**
+ * Implements hook_menu().
+ *
+ * Services UI is defined in the export-ui plugin.
+ */
+function resource_helper_menu() {
+    $items = array();
 
+    $items['resource_helper/session/token'] = array(
+        'page callback' => '_resource_helper_session_token',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
 
+    return $items;
+}
+
+/**
+ * Page callback to generate token.
+ */
+function _resource_helper_session_token() {
+    drupal_add_http_header('Content-Type', 'text/plain');
+    print drupal_get_token('services');
+    drupal_exit();
+}

@@ -7,6 +7,7 @@
 //
 
 #import "CMAddPlaceViewController.h"
+#import "CMPlaceResource.h"
 
 @interface CMAddPlaceViewController ()
 
@@ -36,7 +37,11 @@
 }
 
 - (IBAction)addPlace:(id)sender {
-        [self dismissViewControllerAnimated:YES completion:nil];
+    CMPlaceResource *place = [CMPlaceResource createWithData:@{@"name": @"test place", @"latitude":@1, @"longitude":@1, @"radius":@100}];
+    [place save:^{
+        NSLog(@"place saved");
+    }];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

@@ -27,15 +27,15 @@
 }
 
 - (CMUserResource *)currentUser {
-    if(!self.user) {
-        // no user stored currently, check nsuserdefaults
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSDictionary *storedUser = [defaults objectForKey:@"user"];
-        if(storedUser) {
-            self.user = [CMUserResource createWithData:storedUser];
-            NSLog(@"Current user is '%@'", [storedUser objectForKey:@"name"]);
-        }
-    }
+//    if(!self.user) {
+//        // no user stored currently, check nsuserdefaults
+//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//        NSDictionary *storedUser = [defaults objectForKey:@"user"];
+//        if(storedUser) {
+//            self.user = [CMUserResource createWithData:storedUser];
+//            NSLog(@"Current user is '%@'", [storedUser objectForKey:@"name"]);
+//        }
+//    }
     
     return self.user;
 }
@@ -47,7 +47,7 @@
     NSMutableDictionary *userData = currentUser.data;
     
     [userData removeObjectForKey:@"rdf_mapping"];
-//    [userData removeObjectForKey:@"picture"];
+    [userData removeObjectForKey:@"picture"];
     
     NSLog(@"user data %@", userData);
     [defaults setObject:[userData copy] forKey:@"user"];

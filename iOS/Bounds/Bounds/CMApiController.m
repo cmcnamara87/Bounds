@@ -31,7 +31,7 @@
     if ((self = [super init]))
     {
         [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
-        httpClient = [CMHTTPClient httpClientWithBaseURL:@"http://craigmcnamara.com/bounds/test/"];
+        httpClient = [CMHTTPClient httpClientWithBaseURL:kDomain];
     }
     return self;
 }

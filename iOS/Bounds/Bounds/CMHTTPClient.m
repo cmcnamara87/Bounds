@@ -8,6 +8,8 @@
 
 #import "CMHTTPClient.h"
 #import "AFHTTPClient.h"
+#import "AFJSONRequestOperation.h"
+#import "AFNetworkActivityIndicatorManager.h"
 
 static const CGFloat kDefaultTimeoutInterval = 30.0f;
 
@@ -25,15 +27,16 @@ static const CGFloat kDefaultTimeoutInterval = 30.0f;
     {
         _timeoutInterval = kDefaultTimeoutInterval;
         [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
-        [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
+        [self registerHTTPOperationClass:[AFHTTPRequestOperation class]];
 //        [self setParameterEncoding:AFFormURLParameterEncoding];
 //        [self setDefaultHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
-        [self setDefaultHeader:@"Accept" value:@"application/json"];
+//        [self setDefaultHeader:@"Accept" value:@"application/json"];
         [self setStringEncoding:NSUTF8StringEncoding];
         [[self operationQueue] setMaxConcurrentOperationCount:15];
         
         [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
         [self setDefaultHeader:@"Accept" value:@"application/json"];
+        
         self.parameterEncoding = AFJSONParameterEncoding;
 
 //        [self setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {

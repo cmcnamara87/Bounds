@@ -8,6 +8,7 @@
 
 #import "CMMyPlacesTableViewController.h"
 #import "CMPlaceResource.h"
+#import "CMLoginManager.h"
 
 @interface CMMyPlacesTableViewController ()
 @property (nonatomic, strong) NSMutableArray *places;
@@ -36,7 +37,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    [CMPlaceResource queryWithParameters:@{} success:^(NSMutableArray *resources) {
+    [CMPlaceResource queryWithParameters:@{@"uid": [[[CMLoginManager loginManager] currentUser].data objectForKey:@"uid"]} success:^(NSMutableArray *resources) {
         self.places = resources;
         [self.tableView reloadData];
     }];

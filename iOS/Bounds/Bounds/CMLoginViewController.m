@@ -32,11 +32,13 @@
 //    [CMPlaceResource queryWithParameters:@{} success:^(NSMutableArray *resources) {
 //    }];
     
+    
     NSLog(@"Trying to login\n\n\n\n\n");
-    [CMUserResource loginWithUsername:self.usernameLabel.text password:self.passwordLabel.text success:^(CMUserResource *user) {
-
+    [CMUserResource loginWithUsername:self.usernameLabel.text
+                             password:self.passwordLabel.text
+                              success:^(CMUserResource *user) {
+        [self dismissViewControllerAnimated:YES completion:nil];
     }];
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)viewDidLoad

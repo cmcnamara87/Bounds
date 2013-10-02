@@ -15,6 +15,9 @@
 #define kApiBaseOnline @"http://bestintown.co/v2/"
 #define kBrisbaneCityId @"1213";
 
+#define kDomain @"http://craigmcnamara.com/bounds/"
+
+
 @interface CMApiController : NSObject
 + (CMApiController *)sharedAPI;
 + (CMHTTPClient *)httpClient;
