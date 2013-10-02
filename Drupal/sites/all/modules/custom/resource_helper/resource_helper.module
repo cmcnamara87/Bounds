@@ -83,6 +83,8 @@ function _resource_helper_session_token() {
         "token" => drupal_get_token('services')
     );
 
+    header('Content-type: application/json');
+
     echo json_encode($token);
     drupal_exit();
 }
