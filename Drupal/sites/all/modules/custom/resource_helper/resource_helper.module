@@ -78,6 +78,11 @@ function resource_helper_menu() {
  */
 function _resource_helper_session_token() {
     drupal_add_http_header('Content-Type', 'text/plain');
-    print drupal_get_token('services');
+
+    $token = array(
+        "token" => drupal_get_token('services')
+    );
+
+    echo json_encode($token);
     drupal_exit();
 }
